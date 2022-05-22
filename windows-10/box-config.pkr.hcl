@@ -77,7 +77,7 @@ build {
   }
   post-processors {
     post-processor "vagrant" {
-      output                = "./windows-10-{{.Provider}}.box"
+      output                = "./builds/windows-10-{{.Provider}}.box"
       vagrantfile_template  = "./vagrantfile.tpl"
       compression_level     = "9"
       keep_input_artifact   = false
