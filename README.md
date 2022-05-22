@@ -29,7 +29,7 @@ $ cd packer-boxes/<box-dir>
 $ packer build box-config.pkr.hcl
 ```
 
-> **Note**: This will push the box to Vagrant cloud; to build locally, remove the `vagrant-cloud` post-processor from the `box-config.pkr.hcl` file.
+> **Note**: This will push the box to Vagrant Cloud; to build locally, remove the `vagrant-cloud` post-processor from the `box-config.pkr.hcl` file.
 
 ## License
 
