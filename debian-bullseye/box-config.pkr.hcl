@@ -35,11 +35,11 @@ source "virtualbox-iso" "debian-bullseye" {
   iso_checksum            = "sha256:7892981e1da216e79fb3a1536ce5ebab157afdd20048fe458f2ae34fbc26c19b"
   iso_url                 = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.3.0-amd64-netinst.iso"
   output_directory        = "./builds"
-  shutdown_command        = "echo 'vagrant' | sudo -S /sbin/shutdown -hP now"
+  shutdown_command        = "echo 'vagrant'|sudo -S shutdown -P now"
   ssh_username            = "vagrant"
   ssh_password            = "vagrant"
   ssh_port                = 22
-  ssh_timeout             = "10000s"
+  ssh_timeout             =  "1800s"
   virtualbox_version_file = ".vbox_version"
   vm_name                 = "debian-bullseye"
 }
@@ -47,13 +47,7 @@ source "virtualbox-iso" "debian-bullseye" {
 build {
   sources = ["source.virtualbox-iso.debian-bullseye"]
   provisioner "shell" {
-    environment_vars      = [
-        "HOME_DIR=/home/vagrant", 
-        "http_proxy=${env("http_proxy")}", 
-        "https_proxy=${env("https_proxy")}", 
-        "no_proxy=${env("no_proxy")}"
-        ]
-    execute_command       = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+    execute_command       = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
     expect_disconnect     = true
     scripts               = [
         "./scripts/update.sh", 
