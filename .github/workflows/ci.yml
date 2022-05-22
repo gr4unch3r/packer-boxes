@@ -9,7 +9,7 @@ jobs:
     runs-on: macos-10.15
     defaults:
       run:
-        working-directory: windows-10
+        working-directory: ./windows-10
     steps:
       - name: Checkout
         uses: actions/checkout@v3
