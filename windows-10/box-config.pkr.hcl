@@ -14,8 +14,8 @@ source "virtualbox-iso" "windows-10" {
   winrm_timeout             = "6h"
   disk_size                 = "40000"
   hard_drive_interface      = "sata"
-  iso_url                   = "https://software-download.microsoft.com/download/pr/17134.1.180410-1804.rs4_release_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
-  iso_checksum              = "sha256:27e4feb9102f7f2b21ebdb364587902a70842fb550204019d1a14b120918e455"
+  iso_url                   = "https://software-download.microsoft.com/download/sg/17763.107.101029-1455.rs5_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
+  iso_checksum              = "sha256:0278fc4638741f4a1dc85c39ed7fa76bb15fd582165f6ef036e9a9fb2f029351"
   guest_additions_mode      = "attach"
   guest_additions_interface = "sata"
   guest_additions_url       = ""
@@ -86,7 +86,7 @@ build {
       access_token          = "${var.cloud_token}"
       box_tag               = "gr4unch3r/windows-10"
       keep_input_artifact   = false
-      version               = "10.0.17134"
+      version               = "10.0.17763"
       version_description   = "**Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
     }
   }
