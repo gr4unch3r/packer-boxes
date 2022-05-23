@@ -34,7 +34,6 @@ source "virtualbox-iso" "debian-bullseye" {
   http_directory          = "./http"
   iso_checksum            = "sha256:7892981e1da216e79fb3a1536ce5ebab157afdd20048fe458f2ae34fbc26c19b"
   iso_url                 = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.3.0-amd64-netinst.iso"
-  output_directory        = "./builds"
   shutdown_command        = "echo 'vagrant'|sudo -S shutdown -P now"
   ssh_username            = "vagrant"
   ssh_password            = "vagrant"
