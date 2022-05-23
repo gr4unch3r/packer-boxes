@@ -1,0 +1,131 @@
+---
+
+- name: Add vagrant user to sudoers
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers.d/vagrant-user
+    create: true
+    line: "vagrant ALL=(ALL) NOPASSWD: ALL"
+
+- name: Ensure apt cache is updated
+  apt:
+    update_cache: true
+    cache_valid_time: 3600
+
+- name: Configure SSH daemon
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+  with_items:
+    - regexp: '^UseDNS'
+      line: 'UseDNS no'
+    - regexp: '^GSSAPIAuthentication'
+      line: 'GSSAPIAuthentication no'
+
+- name: Configure Vagrant .ssh directory
+  file:
+    path: /home/vagrant/.ssh
+    state: directory
+    owner: vagrant
+    group: vagrant
+    mode: 0700
+
+- name: Get Vagrant's public key
+  ansible.posix.authorized_key:
+    user: vagrant
+    state: present
+    key: https://github.com/mitchellh/vagrant/raw/master/keys/vagrant.pub
+
+- name: Check if VirtualBox is running the guest VM
+  stat: path=/home/vagrant/.vbox_version
+  register: virtualbox_check
+
+- name: Get VirtualBox version
+  command: cat /home/vagrant/.vbox_version
+  changed_when: false
+  register: virtualbox_version
+
+- name: Mount VirtualBox guest additions ISO
+  ansible.posix.mount:
+    name: /tmp/vbox
+    src: "/home/vagrant/VBoxGuestAdditions_{{ virtualbox_version.stdout }}.iso"
+    opts: loop
+    state: mounted
+    fstype: iso9660
+
+- name: Run VirtualBox guest additions installation
+  shell: sh /tmp/vbox/VBoxLinuxAdditions.run
+  changed_when: true
+  failed_when: false
+
+- name: Unmount VirtualBox guest additions ISO
+  ansible.posix.mount:
+    name: /tmp/vbox
+    src: "/home/vagrant/VBoxGuestAdditions_{{ virtualbox_version.stdout }}.iso"
+    state: absent
+    fstype: iso9660
+
+- name: Delete VirtualBox guest additions ISO
+  file:
+    path: "/home/vagrant/VBoxGuestAdditions_{{ virtualbox_version.stdout }}.iso"
+    state: absent
+
+- name: Remove unneeded packages
+  apt:
+    name: "{{ item }}"
+    state: absent
+    purge: true
+  with_items:
+    - ppp
+    - pppconfig
+    - pppoeconf
+    - popularity-contest
+    - installation-report
+    - linux-headers
+    - linux-source
+    - cpp
+    - gcc
+    - g++
+    - libx11-data
+    - xauth
+    - libxmuu1
+    - libxcb1
+    - libx11-6
+    - libxext6
+
+- name: Remove dev packages
+  apt:
+    name: '*-dev'
+  state: absent
+  purge: true
+
+- name: Clean up apt
+  apt:
+    autoremove: true
+    autoclean: true
+
+- name: Remove /var/cache
+  ansible.builtin.file:
+    path: /var/cache
+    state: absent
+
+- name: Remove /var/log
+  ansible.builtin.file:
+    path: /var/log
+    state: absent
+
+- name: Remove /tmp
+  ansible.builtin.file:
+    path: /tmp
+    state: absent
+
+- name: Remove /var/tmp
+  ansible.builtin.file:
+    path: /tmp
+    state: absent
+
+- name: Force a new random seed to be generated
+  ansible.builtin.file:
+    path: /var/lib/systemd/random-seed
+    state: absent

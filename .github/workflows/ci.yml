@@ -26,32 +26,10 @@ jobs:
           OBJC_DISABLE_INITIALIZE_FORK_SAFETY: YES
           VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
 
-  build_debian:
-    name: build-debian-box
-    runs-on: macos-10.15
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Fix any “Too many open files” errors
-        run: sudo launchctl limit maxfiles unlimited
-
-      - name: Validate template
-        run: packer validate -syntax-only box-config.pkr.hcl
-        working-directory: ${{ github.workspace }}/debian-bullseye
-
-      - name: Build box and publish to Vagrant Cloud
-        if: ${{ success() }}  
-        run: packer build box-config.pkr.hcl
-        working-directory: ${{ github.workspace }}/debian-bullseye
-        env:
-          OBJC_DISABLE_INITIALIZE_FORK_SAFETY: YES
-          VAGRANT_CLOUD_TOKEN: ${{ secrets.VAGRANT_CLOUD_TOKEN }}
-
   notify:
     name: jira-issue
     runs-on: ubuntu-latest
-    needs: [build_windows, build_debian]
+    needs: build_windows
     steps:
       - name: Jira login
         uses: atlassian/gajira-login@master
