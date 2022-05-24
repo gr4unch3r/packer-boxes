@@ -8,7 +8,7 @@ My Packer build templates for Vagrant boxes using the VirtualBox provider.
 
 - [gr4unch3r/windows-10](https://app.vagrantup.com/gr4unch3r/boxes/windows-10) - `windows-10`
 - [gr4unch3r/gentoo](https://app.vagrantup.com/gr4unch3r/boxes/gentoo) - `gentoo`
-- [gr4unch3r/debian](https://app.vagrantup.com/gr4unch3r/boxes/debian) - `debian`
+- [gr4unch3r/ubuntu](https://app.vagrantup.com/gr4unch3r/boxes/ubuntu) - `ubuntu`
 
 ## Quick-start
 
