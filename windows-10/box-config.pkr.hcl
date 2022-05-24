@@ -14,7 +14,7 @@ source "virtualbox-iso" "windows-10" {
   winrm_timeout             = "6h"
   disk_size                 = "61440"
   hard_drive_interface      = "sata"
-  iso_url                   = "https://software-download.microsoft.com/download/pr/19042.508.200927-1902.20h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.is"
+  iso_url                   = "https://software-download.microsoft.com/download/pr/19042.508.200927-1902.20h2_release_svc_refresh_CLIENTENTERPRISEEVAL_OEMRET_x64FRE_en-us.iso"
   iso_checksum              = "sha256:574f00380ead9e4b53921c33bf348b5a2fa976ffad1d5fa20466ddf7f0258964"
   guest_additions_mode      = "attach"
   guest_additions_interface = "sata"
