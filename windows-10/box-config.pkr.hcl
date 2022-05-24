@@ -75,24 +75,20 @@ build {
     elevated_user           = "vagrant"
     elevated_password       = "vagrant"
   }
-  post-processor "vagrant" {
-    output                = "./builds/windows-10-{{.Provider}}.box"
-    vagrantfile_template  = "./vagrantfile.tpl"
-    compression_level     = "9"
-    keep_input_artifact   = false
-  }
-  post-processor "checksum" {
-    checksum_types        = [
-        "sha512"
-    ]
-    output                = "./builds/windows-10-{{.Provider}}.box.DIGESTS"
-  }
-  post-processor "vagrant-cloud" {
-    access_token          = "${var.cloud_token}"
-    box_tag               = "gr4unch3r/windows-10"
-    keep_input_artifact   = false
-    box_checksum          = "sha512:{$checksum}"
-    version               = "10.0.17134"
-    version_description   = "**Windows 10 Version:** 1803 Enterprise Evaluation <br/><br/> **Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
+  post-processors {
+    post-processor "vagrant" {
+      output                = "./builds/windows-10-{{.Provider}}.box"
+      vagrantfile_template  = "./vagrantfile.tpl"
+      compression_level     = "9"
+      keep_input_artifact   = false
+    }
+    post-processor "vagrant-cloud" {
+      access_token          = "${var.cloud_token}"
+      box_tag               = "gr4unch3r/windows-10"
+      keep_input_artifact   = false
+      box_checksum          = "sha512:{$checksum}"
+      version               = "10.0.17134"
+      version_description   = "**Windows 10 Version:** 1803 Enterprise Evaluation <br/><br/> **Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
+    }
   }
 }
