@@ -92,7 +92,7 @@ build {
       access_token          = "${var.cloud_token}"
       box_tag               = "gr4unch3r/windows-10"
       keep_input_artifact   = false
-      checksum              = "sha512:{$checksum}"
+      box_checksum          = "sha512:{$checksum}"
       version               = "10.0.17134"
       version_description   = "**Windows 10 Version:** 1803 Enterprise Evaluation <br/><br/> **Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
     }
