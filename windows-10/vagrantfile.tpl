@@ -19,9 +19,9 @@ Vagrant.configure(2) do |config|
     config.vm.boot_timeout = 300
     config.vm.network :forwarded_port, guest: 3389, host: 3389, id: 'rdp', auto_correct: true
     config.vm.provider :virtualbox do |v, override|
-        #v.gui = true
-        v.customize ["modifyvm", :id, "--memory", 4096]
-        v.customize ["modifyvm", :id, "--cpus", 2]
+        v.gui = true
+        v.memory = 4096
+        v.cpus = 2
         v.customize ["modifyvm", :id, "--vram", 128]
         v.customize ["modifyvm", :id, "--clipboard", "bidirectional"]
         v.customize ["setextradata", "global", "GUI/SuppressMessages", "all" ]
