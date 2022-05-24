@@ -94,6 +94,5 @@ build {
     box_checksum          = "sha512:{$checksum}"
     version               = "10.0.17134"
     version_description   = "**Windows 10 Version:** 1803 Enterprise Evaluation <br/><br/> **Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
-    }
   }
 }
