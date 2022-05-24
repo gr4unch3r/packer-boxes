@@ -1,8 +1,0 @@
----
-- name: Emerging genfstab
-  ansible.builtin.shell:
-    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge -1 sys-fs/genfstab'"
-
-- name: Generating fstab for MBR
-  ansible.builtin.shell:
-    cmd: "{{ chroot_cmd }} '. /etc/profile; genfstab -t UUID / > /etc/fstab'"
