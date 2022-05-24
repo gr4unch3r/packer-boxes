@@ -80,13 +80,13 @@ build {
       output                = "./builds/windows-10-{{.Provider}}.box"
       vagrantfile_template  = "./vagrantfile.tpl"
       compression_level     = "9"
-      keep_input_artifact   = false
+      keep_input_artifact   = true
     }
     post-processor "checksum" {
       checksum_types        = [
         "sha512"
       ]
-      output                = "./builds/packer_{{.BuildName}}_{{.BuilderType}}_{{.ChecksumType}}.checksum"
+      output                = "./builds/windows-10-{{.Provider}}.box.DIGESTS"
     }
     post-processor "vagrant-cloud" {
       access_token          = "${var.cloud_token}"
