@@ -1,0 +1,82 @@
+---
+- name: Installing ebuild repo snapshot
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge-webrsync'"
+
+- name: Updating the @world set
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge -uDNq @world'"
+
+- name: Emerging gentoolkit
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge app-portage/gentoolkit'"
+
+- name: Disabling 'bindist' global USE flag
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; euse -D bindist'"
+
+- name: Emerging cpuid2cpuflags
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge -1 app-portage/cpuid2cpuflags'"
+
+- name: Getting Portage CPU_FLAGS_X86
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; cpuid2cpuflags'"
+  register: cpu_flags
+
+- name: Setting Portage CPU_FLAGS_X86
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/package.use/00cpu-flags
+    line: "*/* {{ cpu_flags.stdout }}"
+    create: true
+
+- name: Configuring ACCEPT_LICENSE variable
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/make.conf
+    line: ACCEPT_LICENSE="-* @FREE"
+    insertafter: EOF
+
+- name: Creating package license directory
+  ansible.builtin.file:
+    path: /mnt/gentoo/etc/portage/package.license
+    state: directory
+
+- name: Setting per-package license override for firmware
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/package.license/kernel
+    line: sys-kernel/linux-firmware @BINARY-REDISTRIBUTABLE
+    create: true
+
+- name: Setting per-package license override for Intel CPU
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/package.license/kernel
+    line: sys-firmware/intel-microcode intel-ucode
+    insertafter: EOF
+
+- name: Setting timezone
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/timezone"
+    line: UTC
+    create: true
+
+- name: Reconfiguring sys-libs/timezone-data
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge --config sys-libs/timezone-data'"
+
+- name: Setting locales
+  ansible.builtin.template:
+    src: templates/locale.gen
+    dest: /mnt/gentoo/etc/locale.gen"
+
+- name: Generating locales
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; locale-gen'"
+
+- name: Setting language
+  ansible.builtin.template:
+    src: templates/02locale
+    dest: /mnt/gentoo/etc/env.d/02locale"
+
+- name: Updating environment
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; env-update'"

@@ -1,0 +1,43 @@
+---
+- name: Setting hostname
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/conf.d/hostname
+    regexp: '^hostname='
+    line: hostname="vagrant"
+
+- name: Setting hostname in hosts file
+  blockinfile:
+    path: /mnt/gentoo/etc/hosts
+    block: |
+      127.0.0.1   localhost
+      ::1         localhost
+      127.0.0.1   vagrant
+
+- name: Emerging dhcpcd
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; emerge net-misc/dhcpcd'"
+
+- name: Enabling dhcpcd
+  ansible.builtin.shell:
+    cmd: "{{ chroot_cmd }} '. /etc/profile; rc-update add dhcpcd default'"
+
+- name: Enabling password authentication for SSH
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/ssh/sshd_config
+    regexp: '^PasswordAuthentication'
+    line: 'PasswordAuthentication yes'
+    state: present
+
+- name: Enabling root login for SSH
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/ssh/sshd_config
+    line: 'PermitRootLogin yes'
+    state: present
+    insertafter: EOF
+
+- name: Add vagrant SSH key
+  ansible.posix.authorized_key:
+    user: vagrant
+    state: present
+    key: https://raw.githubusercontent.com/hashicorp/vagrant/main/keys/vagrant.pub
+

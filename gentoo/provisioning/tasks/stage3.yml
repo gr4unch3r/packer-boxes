@@ -1,0 +1,81 @@
+---
+- name: Updating the system clock
+  ansible.builtin.shell:
+    cmd: rc-service ntpd restart
+
+- name: Determining latest Stage 3 tarball
+  ansible.builtin.uri:
+    url: "{{ gentoo_mirror }}{{ gentoo_stage }}"
+    return_content: true
+  register: latest_stage
+
+- name: Setting facts for latest Stage 3 tarball
+  ansible.builtin.set_fact:
+    url_suffix: "{{ ( latest_stage.content.splitlines() | reject('match', '#') | first ).split(' ')[0] }}"
+    stage_tarball: "{{ ( latest_stage.content.splitlines() | reject('match', '#') | first ).split('/')[1].split(' ')[0] }}"
+
+- name: Fetching Stage 3 tarball
+  ansible.builtin.get_url:
+    url: "{{ gentoo_mirror }}{{ url_suffix }}"
+    dest: /mnt/gentoo/{{ stage_tarball }}
+
+- name: Fetching Stage 3 tarball's detached signature
+  ansible.builtin.get_url:
+    url: "{{ gentoo_mirror }}{{ url_suffix }}.asc"
+    dest: /mnt/gentoo/{{ stage_tarball }}.asc
+
+- name: Fetching signing key
+  ansible.builtin.shell:
+    cmd: gpg --keyserver {{ key_server }} --recv-keys {{ signing_key }}
+
+- name: Verifying signing key fingerprint
+  ansible.builtin.shell:
+    cmd: gpg --fingerprint {{ signing_key }}
+  register: fingerprint_result
+
+- name: Fail if signing key cannot be verified
+  ansible.builtin.fail:
+    msg: Signing key cannot be verified!
+  when: fingerprint_result.stdout.find(key_fingerprint) == -1
+
+- name: Verifying Stage 3 tarball
+  ansible.builtin.shell: 
+    cmd: gpg --verify {{ stage_tarball }}.asc {{ stage_tarball }}
+  args:
+    chdir: /mnt/gentoo
+  when: fingerprint_result.stdout.find(key_fingerprint) != -1
+  register: tarball_status
+
+- name: Fail if Stage 3 tarball cannot be verified
+  ansible.builtin.fail:
+    msg: Stage3 tarball cannot be verified!
+  when: tarball_status.stderr.find('Good signature') == -1
+
+- name: Unpacking Stage 3 tarball
+  ansible.builtin.unarchive:
+    remote_src: true
+    src: /mnt/gentoo/{{ stage_tarball }}
+    dest: /mnt/gentoo
+    extra_opts:
+      - --preserve-permissions
+      - --xattrs-include='*.*'
+      - --numeric-owner
+  when: tarball_status.stderr.find('Good signature') != -1
+
+- name: Configuring compile options for target architecture
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/make.conf
+    regexp: '^COMMON_FLAGS='
+    line: COMMON_FLAGS="-march=native -O2 -pipe"
+
+- name: Configuring MAKEOPTS with CPU thread count
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/make.conf
+    line: MAKEOPTS="-j{{ ansible_processor_vcpus }}"
+    insertafter: EOF
+
+- name: Setting target architecture keyword
+  ansible.builtin.lineinfile:
+    path: /mnt/gentoo/etc/portage/make.conf
+    line: ACCEPT_KEYWORDS="~amd64"
+    insertafter: EOF

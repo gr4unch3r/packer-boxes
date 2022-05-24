@@ -35,31 +35,24 @@ source "virtualbox-iso" "debian-bullseye" {
   iso_checksum            = "sha256:7892981e1da216e79fb3a1536ce5ebab157afdd20048fe458f2ae34fbc26c19b"
   iso_url                 = "https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-11.3.0-amd64-netinst.iso"
   shutdown_command        = "echo 'vagrant'|sudo -S shutdown -P now"
-  ssh_username            = "vagrant"
+  ssh_username            = "root"
   ssh_password            = "vagrant"
   ssh_port                = 22
-  ssh_timeout             =  "1800s"
+  ssh_timeout             = "1800s"
   virtualbox_version_file = ".vbox_version"
   vm_name                 = "debian-bullseye"
 }
 
 build {
   sources = ["source.virtualbox-iso.debian-bullseye"]
-  provisioner "shell" {
-    execute_command       = "echo 'vagrant' | {{.Vars}} sudo -S -E bash '{{.Path}}'"
-    expect_disconnect     = true
-    scripts               = [
-        "./scripts/update.sh", 
-        "./scripts/sshd.sh", 
-        "./scripts/networking.sh", 
-        "./scripts/sudoers.sh", 
-        "./scripts/vagrant.sh", 
-        "./scripts/systemd.sh", 
-        "./scripts/virtualbox.sh", 
-        "./scripts/cleanup.sh", 
-        "./scripts/minimize.sh"
-        ]
+  provisioner "ansible" {
+    user                  = "root"
+    ansible_env_vars      = ["ANSIBLE_HOST_KEY_CHECKING=false"] 
+    playbook_file         = "main.yml"
+    collections_path      = "requirements.yml"
+    use_proxy             = false
   }
+  pos
   post-processor "vagrant" {
     output                = "./builds/debian-bullseye-{{.Provider}}.box"
     compression_level     = "9"
@@ -67,9 +60,9 @@ build {
   }
   post-processor "vagrant-cloud" {
     access_token          = "${var.cloud_token}"
-    box_tag               = "gr4unch3r/debian-bullseye"
+    box_tag               = "gr4unch3r/debian"
     keep_input_artifact   = false
-    version               = "0.1.0"
+    version               = "11.3.0"
     version_description   = "**Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
     }
 }
