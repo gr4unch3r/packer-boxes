@@ -9,10 +9,10 @@
 ENV["VAGRANT_OLD_ENV_OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
 
 Vagrant.configure("2") do |config|
-    config.vm.box = "gentoo-test"
+    config.vm.box = "vagrant-gentoo-linux"
     config.vm.provider :virtualbox do |v|
       v.gui = false
-      v.memory = 4096
+      v.memory = 2048
       v.cpus = 2
     end
   end

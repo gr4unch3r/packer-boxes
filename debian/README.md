@@ -1,4 +1,4 @@
-# Packer Build - Debian Bullseye Vagrant Box
+# Packer Build - Debian Vagrant Box
 
 **Current Debian Version Used:** 11.3.0
 

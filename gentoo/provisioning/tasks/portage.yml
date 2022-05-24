@@ -47,7 +47,7 @@
     line: sys-kernel/linux-firmware @BINARY-REDISTRIBUTABLE
     create: true
 
-- name: Setting per-package license override for Intel CPU
+- name: Setting per-package license override for intel-microcode
   ansible.builtin.lineinfile:
     path: /mnt/gentoo/etc/portage/package.license/kernel
     line: sys-firmware/intel-microcode intel-ucode

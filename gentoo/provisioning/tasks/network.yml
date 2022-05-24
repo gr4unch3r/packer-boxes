@@ -35,7 +35,7 @@
     state: present
     insertafter: EOF
 
-- name: Add vagrant SSH key
+- name: Adding Vagrant SSH key
   ansible.posix.authorized_key:
     user: vagrant
     state: present

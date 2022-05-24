@@ -3,13 +3,13 @@
   ansible.builtin.shell:
     cmd: "{{ chroot_cmd }} '. /etc/profile; emerge sys-kernel/linux-firmware'"
 
-- name: Setting 'initramfs' USE flag if Intel CPU
+- name: Setting 'initramfs' USE flag for intel-microcode
   ansible.builtin.lineinfile:
     path: /mnt/gentoo/etc/portage/package.use/intel-microcode
     line: sys-firmware/intel-microcode initramfs
     create: true
 
-- name: Emerging intel-microcode if Intel CPU
+- name: Emerging intel-microcode
   ansible.builtin.shell:
     cmd: "{{ chroot_cmd }} '. /etc/profile; emerge sys-firmware/intel-microcode'"
 

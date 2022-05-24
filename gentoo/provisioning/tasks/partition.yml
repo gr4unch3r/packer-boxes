@@ -36,7 +36,7 @@
   ansible.builtin.shell:
     cmd: swapon /dev/sda2
 
-- name: Creating / partition if BIOS
+- name: Creating / partition
   community.general.parted:
     device: /dev/sda
     number: 3

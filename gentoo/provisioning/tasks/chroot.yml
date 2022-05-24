@@ -55,7 +55,7 @@
     fstype: tmpfs
     state: mounted
 
-- name: Mounting boot partition if BIOS
+- name: Mounting boot partition
   ansible.posix.mount:
     path: /mnt/gentoo/boot
     src: /dev/sda1
