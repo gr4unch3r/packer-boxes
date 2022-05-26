@@ -34,7 +34,7 @@ source "virtualbox-iso" "ubuntu-xenial" {
   guest_additions_url     = ""
   guest_os_type           = "Ubuntu_64"
   hard_drive_interface    = "sata"
-  headless                = ""
+  headless                = "true"
   http_directory          = "./http"
   iso_checksum            = "sha256:b23488689e16cad7a269eb2d3a3bf725d3457ee6b0868e00c8762d3816e25848"
   iso_url                 = "http://releases.ubuntu.com/16.04/ubuntu-16.04.7-server-amd64.iso"
