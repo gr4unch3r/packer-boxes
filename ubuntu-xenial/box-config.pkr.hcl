@@ -51,13 +51,7 @@ source "virtualbox-iso" "ubuntu-xenial" {
 build {
   sources                 = ["source.virtualbox-iso.ubuntu-xenial"]
   provisioner "shell" {
-    environment_vars      = [
-        "HOME_DIR=/home/vagrant", 
-        "http_proxy=${env("http_proxy")}", 
-        "https_proxy=${env("https_proxy")}", 
-        "no_proxy=${env("no_proxy")}"
-        ]
-    execute_command       = "echo 'vagrant' | {{ .Vars }} sudo -S -E sh -eux '{{ .Path }}'"
+    execute_command       = "echo 'vagrant' | sudo -S -E sh -eux '{{ .Path }}'"
     expect_disconnect     = true
     scripts               = [
         "./scripts/update.sh", 
