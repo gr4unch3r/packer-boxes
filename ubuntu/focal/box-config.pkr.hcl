@@ -28,7 +28,7 @@ source "virtualbox-iso" "ubuntu-focal" {
   guest_os_type           = "Ubuntu_64"
   hard_drive_interface    = "sata"
   headless                = "true"
-  http_directory          = "../http"
+  http_directory          = "{{template_dir}}/../http"
   iso_checksum            = "sha256:28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad"
   iso_url                 = "https://releases.ubuntu.com/focal/ubuntu-20.04.4-live-server-amd64.iso"
   memory                  = "1024"
@@ -47,19 +47,19 @@ build {
     execute_command       = "echo 'vagrant' | sudo -S -E sh -eux '{{ .Path }}'"
     expect_disconnect     = true
     scripts               = [
-        "../scripts/update.sh", 
-        "../scripts/sshd.sh", 
-        "../scripts/networking.sh", 
-        "../scripts/sudoers.sh", 
-        "../scripts/vagrant.sh", 
-        "../scripts/virtualbox.sh", 
-        "../scripts/cleanup.sh", 
-        "../scripts/minimize.sh"
+        "{{template_dir}}/../scripts/update.sh", 
+        "{{template_dir}}/../scripts/sshd.sh", 
+        "{{template_dir}}/../scripts/networking.sh", 
+        "{{template_dir}}/../scripts/sudoers.sh", 
+        "{{template_dir}}/../scripts/vagrant.sh", 
+        "{{template_dir}}/../scripts/virtualbox.sh", 
+        "{{template_dir}}/../scripts/cleanup.sh", 
+        "{{template_dir}}/../scripts/minimize.sh"
         ]
   }
   post-processors {
     post-processor "vagrant" {
-      output              = "../builds/ubuntu-20.04-{{.Provider}}.box"
+      output              = "{{template_dir}}/../builds/ubuntu-20.04-{{.Provider}}.box"
       compression_level   = "9"
       keep_input_artifact = false
     }
