@@ -35,7 +35,7 @@ source "virtualbox-iso" "ubuntu-xenial" {
   guest_os_type           = "Ubuntu_64"
   hard_drive_interface    = "sata"
   headless                = "true"
-  http_directory          = "./http"
+  http_directory          = "../http"
   iso_checksum            = "sha256:b23488689e16cad7a269eb2d3a3bf725d3457ee6b0868e00c8762d3816e25848"
   iso_url                 = "http://releases.ubuntu.com/16.04/ubuntu-16.04.7-server-amd64.iso"
   memory                  = "1024"
@@ -54,19 +54,19 @@ build {
     execute_command       = "echo 'vagrant' | sudo -S -E sh -eux '{{ .Path }}'"
     expect_disconnect     = true
     scripts               = [
-        "./scripts/update.sh", 
-        "./scripts/sshd.sh", 
-        "./scripts/networking.sh", 
-        "./scripts/sudoers.sh", 
-        "./scripts/vagrant.sh", 
-        "./scripts/virtualbox.sh", 
-        "./scripts/cleanup.sh", 
-        "./scripts/minimize.sh"
+        "../scripts/update.sh", 
+        "../scripts/sshd.sh", 
+        "../scripts/networking.sh", 
+        "../scripts/sudoers.sh", 
+        "../scripts/vagrant.sh", 
+        "../scripts/virtualbox.sh", 
+        "../scripts/cleanup.sh", 
+        "../scripts/minimize.sh"
         ]
   }
   post-processors {
     post-processor "vagrant" {
-      output              = "./builds/ubuntu-16.04-{{.Provider}}.box"
+      output              = "../builds/ubuntu-16.04-{{.Provider}}.box"
       compression_level   = "9"
       keep_input_artifact = false
     }
