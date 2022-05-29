@@ -5,20 +5,29 @@ variable "cloud_token" {
 
 source "virtualbox-iso" "ubuntu-focal" {
   boot_command            = [
-      " <wait>",
-      " <wait>",
-      " <wait>",
-      " <wait>",
-      " <wait>",
       "<esc><wait>",
-      "<f6><wait>",
       "<esc><wait>",
-      "<bs><bs><bs><bs><wait>",
-      " autoinstall<wait5>",
-      " ds=nocloud-net<wait5>",
-      ";s=http://<wait5>{{.HTTPIP}}<wait5>:{{.HTTPPort}}/<wait5>",
-      " ---<wait5>",
-      "<enter><wait5>"
+      "<enter><wait>",
+      "/install/vmlinuz<wait>",
+      " auto<wait>",
+      " console-setup/ask_detect=false<wait>",
+      " console-setup/layoutcode=us<wait>",
+      " console-setup/modelcode=pc105<wait>",
+      " debconf/frontend=noninteractive<wait>",
+      " debian-installer=en_US.UTF-8<wait>",
+      " fb=false<wait>",
+      " initrd=/install/initrd.gz<wait>",
+      " kbd-chooser/method=us<wait>",
+      " keyboard-configuration/layout=USA<wait>",
+      " keyboard-configuration/variant=USA<wait>",
+      " locale=en_US.UTF-8<wait>",
+      " netcfg/get_domain=vm<wait>",
+      " netcfg/get_hostname=vagrant<wait>",
+      " grub-installer/bootdev=/dev/sda<wait>",
+      " noapic<wait>",
+      " preseed/url=http://{{ .HTTPIP }}:{{ .HTTPPort }}/preseed.cfg<wait>",
+      " -- <wait>",
+      "<enter><wait>"
       ]
   boot_wait               = "5s"
   cpus                    = "2"
@@ -29,8 +38,8 @@ source "virtualbox-iso" "ubuntu-focal" {
   hard_drive_interface    = "sata"
   headless                = "true"
   http_directory          = "../http"
-  iso_checksum            = "sha256:28ccdb56450e643bad03bb7bcf7507ce3d8d90e8bf09e38f6bd9ac298a98eaad"
-  iso_url                 = "https://releases.ubuntu.com/focal/ubuntu-20.04.4-live-server-amd64.iso"
+  iso_checksum            = "sha256:f11bda2f2caed8f420802b59f382c25160b114ccc665dbac9c5046e7fceaced2"
+  iso_url                 = "http://cdimage.ubuntu.com/ubuntu-legacy-server/releases/20.04/release/ubuntu-20.04.1-legacy-server-amd64.iso"
   memory                  = "1024"
   shutdown_command        = "echo 'vagrant' | sudo -S shutdown -P now"
   ssh_password            = "vagrant"
@@ -67,8 +76,8 @@ build {
       access_token        = "${var.cloud_token}"
       box_tag             = "gr4unch3r/ubuntu-focal"
       keep_input_artifact = false
-      version             = "20.04.4"
-      version_description = "**Ubuntu Version:** 20.04.4 <br/><br/> **Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
+      version             = "20.04.1"
+      version_description = "**Ubuntu Version:** 20.04.1 <br/><br/> **Source:** [https://github.com/gr4unch3r/packer-boxes](https://github.com/gr4unch3r/packer-boxes)"
     }
   }
 }
