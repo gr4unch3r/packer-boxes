@@ -63,7 +63,7 @@ build {
   provisioner "windows-restart" {
   }
   provisioner "chef-solo" {
-    cookbook_paths = ["$../cookbooks"]
+    cookbook_paths = ["../cookbooks"]
     guest_os_type  = "windows"
     run_list       = [
         "packer::cleanup", 
