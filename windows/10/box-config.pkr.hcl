@@ -20,8 +20,8 @@ source "virtualbox-iso" "windows-10" {
   guest_additions_interface = "sata"
   guest_additions_url       = ""
   floppy_files              = [
-      "./answer_files/Autounattend.xml",
-      "./floppy/base_setup.ps1"
+      "../answer_files/10/Autounattend.xml",
+      "../floppy/base_setup.ps1"
       ]
   shutdown_command          = "shutdown /s /t 10 /f /d p:4:1 /c \"Packer Shutdown\""
   shutdown_timeout          = "15m"
@@ -36,7 +36,7 @@ source "virtualbox-iso" "windows-10" {
 build {
   sources = ["source.virtualbox-iso.windows-10"]
   provisioner "chef-solo" {
-    cookbook_paths          = ["./cookbooks"]
+    cookbook_paths          = ["../cookbooks"]
     guest_os_type           = "windows"
     run_list                = [
         "packer::disable_uac",
@@ -50,7 +50,7 @@ build {
   provisioner "windows-restart" {
   }
   provisioner "chef-solo" {
-    cookbook_paths          = ["./cookbooks"]
+    cookbook_paths          = ["../cookbooks"]
     guest_os_type           = "windows"
     run_list                = [
         "packer::vm_tools",
@@ -63,7 +63,7 @@ build {
   provisioner "windows-restart" {
   }
   provisioner "chef-solo" {
-    cookbook_paths          = ["./cookbooks"]
+    cookbook_paths          = ["../cookbooks"]
     guest_os_type           = "windows"
     run_list                = [
         "packer::cleanup",
@@ -71,14 +71,14 @@ build {
     ]
   }
   provisioner "powershell" {
-    script                  = "./scripts/cleanup.ps1"
+    script                  = "../scripts/cleanup.ps1"
     elevated_user           = "vagrant"
     elevated_password       = "vagrant"
   }
   post-processors {
     post-processor "vagrant" {
-      output                = "./builds/windows-10-{{.Provider}}.box"
-      vagrantfile_template  = "./vagrantfile.tpl"
+      output                = "../builds/windows-10-{{.Provider}}.box"
+      vagrantfile_template  = "../tpl/vagrantfile.tpl"
       compression_level     = "9"
       keep_input_artifact   = false
     }

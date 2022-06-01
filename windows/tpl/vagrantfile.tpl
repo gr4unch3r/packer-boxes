@@ -9,8 +9,8 @@
 ENV["VAGRANT_OLD_ENV_OBJC_DISABLE_INITIALIZE_FORK_SAFETY"] = "YES"
 
 Vagrant.configure(2) do |config|
-    config.vm.define "vagrant-windows-10"
-    config.vm.box = "windows-10"
+    config.vm.define "vagrant-windows"
+    config.vm.box = "windows"
     config.vm.guest = :windows
     config.windows.halt_timeout = 15
     config.vm.communicator = "winrm"
